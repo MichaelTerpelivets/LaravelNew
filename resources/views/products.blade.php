@@ -48,7 +48,7 @@
     <div class="panel-body">
 	<table class="table table-striped task-table">
 	    <!-- Заголовок таблицы -->
-	    <thead>
+	    <thead >
 	    <th>Название</th>
 	    <th>Цена</th>
             <th>Описание</th>

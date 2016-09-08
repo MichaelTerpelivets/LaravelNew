@@ -54,8 +54,8 @@ return redirect('/');
   
 });
 
-Route::get('/edit/{$id}', function ($id) {
-  $product = Product::findOrFail($id)->get();
+Route::post('/edit/{id}', function ($id) {
+  $product = Product::find($id);
   return view('editProduct', [
     'editProduct' => $product
   ]);
