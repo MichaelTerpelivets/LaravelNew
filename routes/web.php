@@ -1,30 +1,54 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
- use App\Task;
- use App\Product;
-  use Illuminate\Http\Request;
+use App\Task;
+use App\Product;
+use Illuminate\Http\Request;
 
-  /**
-   * Вывести список всех задач
-   */
-
+/**
+ * Вывести список всех задач
+ */
 Route::get('/', function () {
-  $products = Product::orderBy('created_at', 'asc')->get();
-  return view('products', [
-    'products' => $products
-  ]);
+    $products = Product::orderBy('created_at', 'asc')->get();
+    return view('products', [
+	'products' => $products
+    ]);
 });
-  /**
-   * Добавить новую задачу
-   */
+/**
+ * Добавить новую задачу
+ */
+Route::post('/editProduct/{id}', function($id, Request $request) {
+    $validator = Validator::make($request->all(),[
+	'name'=>'required|max:255',
+	'price'=>'required|integer',
+	'discription'=>'required',
+	
+    ]);
+    if($validator->fails()){
+	return redirect("/")
+	->withInput()
+	->withErrors($validator);
+    }
+    
+    $product=Product::find($id);
+    $product->name = $request->name;
+    $product->price = $request->price;
+    $product->discription = $request->discription;
+    $product->category = $request->category;
+    $product->save();
+    $products=  Product::orderBy('created_at','asc')->get();
+    return view('products', [
+	'products' => $products
+    ]);
+   
+});
 
- Route::post('/product', function (Request $request) {
+Route::post('/product', function (Request $request) {
 //  $validator = Validator::make(product$request->all(), [
 //    'name' => 'required|max:255',
 //  ]);
@@ -33,30 +57,28 @@ Route::get('/', function () {
 //      ->withInput()
 //      ->withErrors($validator);
 //  }
-$product = new Product();
-$product->name = $request->name;
-$product->price = $request->price;
-$product->discription = $request->discription;
-$product->category = $request->category;
-$product->save();
-return redirect('/');
-  // Создание задачи...
+    $product = new Product();
+    $product->name = $request->name;
+    $product->price = $request->price;
+    $product->discription = $request->discription;
+    $product->category = $request->category;
+    $product->save();
+    return redirect('/');
+    // Создание задачи...
 });
 
-  /**
-   * Удалить существующую задачу
-   */
+/**
+ * Удалить существующую задачу
+ */
+Route::delete('/product/{id}', function ($id) {
+    Product::findOrFail($id)->delete();
 
-   Route::delete('/product/{id}', function ($id) {
-  Product::findOrFail($id)->delete();
-
-  return redirect('/');
-  
+    return redirect('/');
 });
 
 Route::post('/edit/{id}', function ($id) {
-  $product = Product::find($id);
-  return view('editProduct', [
-    'editProduct' => $product
-  ]);
+    $product = Product::find($id);
+    return view('editProduct', [
+	'product' => $product
+    ]);
 });

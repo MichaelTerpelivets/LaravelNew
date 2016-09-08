@@ -81,7 +81,7 @@
 			</form>
                         <form action="/edit/{{ $product->id }}" method="POST">
 			    {{ csrf_field() }}
-			    {{ method_field('EDIT') }}
+		
 			    <button>Редактировать</button>
 			</form>
 		    </td>		
